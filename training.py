@@ -52,7 +52,7 @@ class ModelTrainer:
 
     def generate_images(self, epoch):
         with torch.no_grad():
-            fake_images = (self.g(self.sample_noise) + 1) / 2
+            fake_images = (self.g(self.sample_noise).cpu().numpy() + 1) / 2
         plt.figure(figsize=(10, 10))
         for i in range(16):
             plt.subplot(4, 4, i + 1)
