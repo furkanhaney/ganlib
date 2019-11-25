@@ -64,8 +64,9 @@ class ModelTrainer:
         num_batches = len(self.loader)
         for epoch in range(epochs):
             for i, batch in enumerate(self.loader):
+                images = batch[0].to(self.device)
                 g_loss = self.train_g()
-                d_loss = self.train_d(batch[0])
+                d_loss = self.train_d(images)
                 print("Epoch: {}/{} Batch: {}/{} g_loss: {:.4f} d_loss: {:.4f}".format(
                     epoch + 1, epochs, i + 1, num_batches, g_loss, d_loss), end="\r")
             self.generate_images(epoch)
