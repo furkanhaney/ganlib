@@ -68,4 +68,4 @@ class ModelTrainer:
                 d_loss = self.train_d(batch[0])
                 print("Epoch: {}/{} Batch: {}/{} g_loss: {:.4f} d_loss: {:.4f}".format(
                     epoch + 1, epochs, i + 1, num_batches, g_loss, d_loss), end="\r")
-                self.generate_images(epoch)
+            self.generate_images(epoch)
