@@ -4,11 +4,13 @@ from training import ModelTrainer
 
 def main():
     NOISE_DIM = 100
-    BATCH_SIZE = 32
+    BATCH_SIZE = 128
 
     loader = get_mnist_loader(batch_size=BATCH_SIZE)
     gen = Generator(noise_dim=NOISE_DIM)
+    print(gen)
     disc = Discriminator()
+    print(disc)
     trainer = ModelTrainer(gen, disc, loader)
     trainer.train(epochs=10)
 

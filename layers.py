@@ -36,7 +36,7 @@ class Dense(nn.Module):
 
 
 class Conv2D(nn.Module):
-    def __init__(self, in_units, out_units, bn=True, act=F.relu):
+    def __init__(self, in_units, out_units, bn=True, act=F.leaky_relu):
         super().__init__()
         self.conv = nn.Conv2d(in_units, out_units, kernel_size=3, padding=1)
         self.has_bn = bn
