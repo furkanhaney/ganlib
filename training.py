@@ -4,7 +4,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 class ModelTrainer:
-    def __init__(self, generator, discriminator, loader, noise_dim=100, lr=0.001):
+    def __init__(self, generator, discriminator, loader, noise_dim=100, lr=0.0001):
         self.loader = loader
         self.batch_size = loader.batch_size
         self.noise_dim = noise_dim

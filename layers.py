@@ -19,7 +19,7 @@ class Downscale(nn.Module):
 
 
 class Dense(nn.Module):
-    def __init__(self, in_units, out_units, bn=True, act=F.relu):
+    def __init__(self, in_units, out_units, bn=True, act=F.leaky_relu):
         super().__init__()
         self.lin = nn.Linear(in_units, out_units)
         self.has_bn = bn
