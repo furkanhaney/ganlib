@@ -11,7 +11,7 @@ def main():
     parser.add_argument("--gen_dropout", help="Enables dropout for generator layers.", action='store_true')
     parser.add_argument("--disc_batch_norm", help="Enables batch_norm for discriminator layers.", action='store_true')
     parser.add_argument("--disc_dropout", help="Enables dropout for discriminator layers.", action='store_true')
-    parser.add_argument("--device", help="Device to train the model on: cpu or gpu", choices=["cpu", "gpu"], default=torch.cuda.is_available())
+    parser.add_argument("--device", help="Device to train the model on: cpu or gpu", choices=["cpu", "gpu"], default="gpu" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--epochs", help="Number of epochs to train.", type=int, default=100)
     parser.add_argument("--batch_size", help="Size of minibatches.", type=int, default=128)
     parser.add_argument("--num_workers", help="Number of workers for the data loaders.", type=int, default=2)

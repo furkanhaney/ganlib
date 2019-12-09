@@ -60,6 +60,7 @@ class GanTrainer:
             plt.subplot(4, 4, i + 1)
             plt.imshow(fake_images[i, 0], cmap="gray")
         plt.savefig("samples/epoch_{}".format(epoch + 1))
+        plt.close()
 
     def train(self, epochs):
         print("Starting training on {}.".format(self.device))
@@ -69,6 +70,6 @@ class GanTrainer:
                 images = batch[0].to(self.device)
                 g_loss = self.train_g()
                 d_loss = self.train_d(images)
-                print("Epoch: {}/{} Batch: {}/{} g_loss: {:.4f} d_loss: {:.4f}".format(
+                print("Epoch: {}/{} Batch: {}/{} g_loss: {:.4f} d_loss: {:.4f}        ".format(
                     epoch + 1, epochs, i + 1, num_batches, g_loss, d_loss), end="\r")
             self.generate_images(epoch)
