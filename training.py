@@ -59,17 +59,30 @@ class GanTrainer:
         for i in range(16):
             plt.subplot(4, 4, i + 1)
             plt.imshow(fake_images[i, 0], cmap="gray")
-        plt.savefig("samples/epoch_{}".format(epoch + 1))
+        plt.savefig("output/epoch_{}".format(epoch + 1))
+        plt.close()
+
+    def generate_charts(self, g_losses, d_losses):
+        plt.plot(g_losses)
+        plt.plot(d_losses)
+        plt.savefig("output/0-charts")
         plt.close()
 
     def train(self, epochs):
         print("Starting training on {}.".format(self.device))
         num_batches = len(self.loader)
+        avg_g_loss = 0
+        avg_d_loss = 0
+        g_losses, d_losses = [], []
         for epoch in range(epochs):
             for i, batch in enumerate(self.loader):
                 images = batch[0].to(self.device)
-                g_loss = self.train_g()
-                d_loss = self.train_d(images)
+                g_loss, d_loss = self.train_g(), self.train_d(images)
+                avg_g_loss = (g_loss + i * avg_g_loss) / (i + 1)
+                avg_d_loss = (d_loss + i * avg_d_loss) / (i + 1)
                 print("Epoch: {}/{} Batch: {}/{} g_loss: {:.4f} d_loss: {:.4f}        ".format(
-                    epoch + 1, epochs, i + 1, num_batches, g_loss, d_loss), end="\r")
+                    epoch + 1, epochs, i + 1, num_batches, avg_g_loss, avg_d_loss), end="\r")
+            g_losses.append(avg_g_loss)
+            d_losses.append(avg_d_loss)
+            self.generate_charts(g_losses, d_losses)
             self.generate_images(epoch)
