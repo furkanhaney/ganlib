@@ -3,16 +3,18 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
-class ModelTrainer:
-    def __init__(self, generator, discriminator, loader, noise_dim=100, lr=0.0001):
+class GanTrainer:
+    def __init__(self, generator, discriminator, loader, device, noise_dim=100, lr=0.0001, loss="mse"):
         self.loader = loader
         self.batch_size = loader.batch_size
         self.noise_dim = noise_dim
-        self.criterion = nn.MSELoss()
-        if torch.cuda.is_available():
-            self.device = torch.device("cuda:0")
+        if loss == "mse":
+            self.criterion = nn.MSELoss()
+        elif loss == "bce":
+            self.criterion = nn.BCELoss()
         else:
-            self.device = torch.device("cpu")
+            raise Exception("Invalid loss function!")
+        self.device = device
         self.g = generator.to(self.device)
         self.d = discriminator.to(self.device)
         self.g_opt = optim.Adam(self.g.parameters(), lr=lr)
@@ -32,8 +34,8 @@ class ModelTrainer:
         fake_labels = self.d(fake_images)
         real_labels = self.d(real_images)
 
-        d_loss = self.criterion(fake_labels, torch.ones_like(fake_labels)) * 0.5
-        d_loss += self.criterion(real_labels, torch.zeros_like(real_labels)) * 0.5
+        d_loss = self.criterion(fake_labels, torch.zeros_like(fake_labels)) * 0.5
+        d_loss += self.criterion(real_labels, torch.ones_like(real_labels)) * 0.5
         d_loss.backward()
         self.d_opt.step()
         return d_loss.item()
@@ -45,7 +47,7 @@ class ModelTrainer:
         fake_images = self.g(noise)
         fake_labels = self.d(fake_images)
 
-        g_loss = self.criterion(fake_labels, torch.zeros_like(fake_labels))
+        g_loss = self.criterion(fake_labels, torch.ones_like(fake_labels))
         g_loss.backward()
         self.g_opt.step()
         return g_loss.item()

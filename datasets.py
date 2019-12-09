@@ -4,7 +4,7 @@ from torchvision.transforms import Compose, ToTensor, Normalize, Pad
 from torch.utils.data import DataLoader
 
 
-def get_mnist_loader(batch_size=32):
+def get_mnist_loader(batch_size=32, num_workers=2):
     transforms = Compose([
         Pad(2),
         ToTensor(),
@@ -18,7 +18,7 @@ def get_mnist_loader(batch_size=32):
     )
     loader = DataLoader(
         dataset=dataset,
-        num_workers=2,
+        num_workers=num_workers,
         pin_memory=True,
         batch_size=batch_size,
         shuffle=True

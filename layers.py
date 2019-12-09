@@ -2,6 +2,15 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+def parse_activation(name):
+    if name == "leaky_relu":
+        return nn.LeakyReLU(0.2)
+    elif name == "sigmoid":
+        return nn.Sigmoid()
+    elif name == "tanh":
+        return nn.Tanh()
+    return None
+
 
 class GlobalAvgPooling(nn.Module):
     def forward(self, x):
@@ -19,20 +28,19 @@ class Downscale(nn.Module):
 
 
 class Dense(nn.Module):
-    def __init__(self, in_units, out_units, bn=True, act=F.leaky_relu):
+    def __init__(self, in_units, out_units, bn=True, act="leaky_relu", dropout=False):
         super().__init__()
-        self.lin = nn.Linear(in_units, out_units)
-        self.has_bn = bn
+        layers = [nn.Linear(in_units, out_units)]
         if bn:
-            self.bn = nn.BatchNorm1d(out_units)
-        self.act = act
+            layers.append(nn.BatchNorm1d(out_units))
+        if dropout:
+            layers.append(nn.Dropout(p=0.5))
+        if act != "linear":
+            layers.append(parse_activation(act))
+        self.seq = nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.lin(x)
-        x = self.act(x)
-        if self.has_bn:
-            x = self.bn(x)
-        return x
+        return self.seq(x)
 
 
 class Conv2D(nn.Module):
