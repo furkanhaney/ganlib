@@ -68,6 +68,11 @@ class GanTrainer:
         plt.savefig("output/0-charts")
         plt.close()
 
+    def calculate_fid(self):
+        a = self.get_noise(2048).to(self.device)
+        with torch.no_grad():
+            fake_images = (self.g(self.sample_noise).cpu().numpy() + 1) / 2
+
     def train(self, epochs):
         print("Starting training on {}.".format(self.device))
         num_batches = len(self.loader)
