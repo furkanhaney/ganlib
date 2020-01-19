@@ -7,10 +7,10 @@ class Discriminator(nn.Module):
     def __init__(self, bn=False, dropout=False, width=1):
         super().__init__()
         self.seq = nn.Sequential(
-            Dense(1024, 1024 * width, bn=bn, dropout=dropout),
-            Dense(1024 * width, 512 * width, bn=bn, dropout=dropout),
-            Dense(512 * width, 256 * width, bn=bn, dropout=dropout),
-            Dense(256 * width, 1, act="sigmoid", bn=False, dropout=False),
+            Dense(1024, int(1024 * width), bn=bn, dropout=dropout),
+            Dense(int(1024 * width), int(512 * width), bn=bn, dropout=dropout),
+            Dense(int(512 * width), int(256 * width), bn=bn, dropout=dropout),
+            Dense(int(256 * width), 1, act="sigmoid", bn=False, dropout=False),
         )
 
     def forward(self, images):
@@ -19,16 +19,16 @@ class Discriminator(nn.Module):
 
     def __str__(self):
         num_params = sum(p.numel() for p in self.parameters())
-        return super().__str__() + "\nTotal Parameters: {:,}".format(num_params)
+        return super().__str__() + "\nTotal Parameters: {:,}\n".format(num_params)
 
 class Generator(nn.Module):
     def __init__(self, noise_dim=100, bn=False, dropout=False, width=1):
         super().__init__()
         self.seq = nn.Sequential(
-            Dense(noise_dim, 256 * width, bn=bn, dropout=dropout),
-            Dense(256 * width, 512 * width, bn=bn, dropout=dropout),
-            Dense(512 * width, 1024 * width, bn=bn, dropout=dropout),
-            Dense(1024 * width, 1024, act="tanh", bn=False, dropout=False),
+            Dense(noise_dim, int(256 * width), bn=bn, dropout=dropout),
+            Dense(int(256 * width), int(512 * width), bn=bn, dropout=dropout),
+            Dense(int(512 * width), int(1024 * width), bn=bn, dropout=dropout),
+            Dense(int(1024 * width), 1024, act="tanh", bn=False, dropout=False),
         )
 
     def forward(self, noise):
@@ -38,4 +38,4 @@ class Generator(nn.Module):
 
     def __str__(self):
         num_params = sum(p.numel() for p in self.parameters())
-        return super().__str__() + "\nTotal Parameters: {:,}".format(num_params)
+        return super().__str__() + "\nTotal Parameters: {:,}\n".format(num_params)
